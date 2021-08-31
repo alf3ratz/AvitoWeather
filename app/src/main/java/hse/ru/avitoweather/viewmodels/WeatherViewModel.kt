@@ -11,8 +11,12 @@ class WeatherViewModel(@NonNull application: Application) : AndroidViewModel(app
     private var loginRepository: WeatherRepository =
         WeatherRepository()
 
-    fun registerAccount(login:String): LiveData<WeatherResponse> {
-        return loginRepository.registerAccount(login)
+    fun getCityWeather(city:String,apiKey:String): LiveData<WeatherResponse> {
+        return loginRepository.getCityWeather(city,apiKey)
     }
 
+
+    fun getWeatherAtLastHour(apiKey:String): LiveData<WeatherResponse> {
+        return loginRepository.getWeatherAtLastHour(apiKey)
+    }
 }

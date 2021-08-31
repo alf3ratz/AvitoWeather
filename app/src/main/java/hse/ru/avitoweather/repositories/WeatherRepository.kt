@@ -1,8 +1,12 @@
 package hse.ru.avitoweather.repositories
 
+import android.util.Log
 import androidx.annotation.NonNull
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import hse.ru.avitoweather.network.ApiClient
+import hse.ru.avitoweather.network.ApiService
+import hse.ru.avitoweather.responses.WeatherResponse
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -10,17 +14,39 @@ import retrofit2.Response
 class WeatherRepository {
     private var apiService: ApiService = ApiClient.getRetrofit().create(ApiService::class.java)
 
-    fun registerAccount(login: String): LiveData<LoginResponse> {
-        val data: MutableLiveData<LoginResponse> = MutableLiveData()
-        apiService.getRegistrationCode(login).enqueue(object : Callback<LoginResponse> {
-            override fun onFailure(@NonNull call: Call<LoginResponse>, t: Throwable) {
+    fun getCityWeather(city: String, apiKey: String): LiveData<WeatherResponse> {
+        val data: MutableLiveData<WeatherResponse> = MutableLiveData()
+        apiService.getCityWeather(city, apiKey).enqueue(object : Callback<WeatherResponse> {
+            override fun onFailure(@NonNull call: Call<WeatherResponse>, t: Throwable) {
                 data.value = null
+                Log.i("fal", "upalo\n${call.request().body()}")
             }
+
             override fun onResponse(
-                @NonNull call: Call<LoginResponse>,
-                @NonNull response: Response<LoginResponse>
+                @NonNull call: Call<WeatherResponse>,
+                @NonNull response: Response<WeatherResponse>
             ) {
                 data.value = response.body()
+                Log.i("fal", "ne upalo\n${response.isSuccessful}")
+            }
+        })
+        return data
+    }
+
+    fun getWeatherAtLastHour(apiKey: String): LiveData<WeatherResponse> {
+        val data: MutableLiveData<WeatherResponse> = MutableLiveData()
+        apiService.getWeatherAtLastHour(apiKey).enqueue(object : Callback<WeatherResponse> {
+            override fun onFailure(@NonNull call: Call<WeatherResponse>, t: Throwable) {
+                data.value = null
+                Log.i("fal", "upalo\n${call.request().body()}")
+            }
+
+            override fun onResponse(
+                @NonNull call: Call<WeatherResponse>,
+                @NonNull response: Response<WeatherResponse>
+            ) {
+                data.value = response.body()
+                Log.i("fal", "ne upalo\n${response.isSuccessful}")
             }
         })
         return data

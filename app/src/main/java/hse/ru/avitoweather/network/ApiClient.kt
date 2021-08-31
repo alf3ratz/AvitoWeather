@@ -9,10 +9,10 @@ class ApiClient {
         fun getRetrofit(): Retrofit {
             if (retrofit == null)
                 retrofit = Retrofit.Builder()
-                    .baseUrl("http://217.23.139.86/")//http://127.0.0.1:5000/ http://localhost:5000/
+                    .baseUrl("http://api.openweathermap.org/data/2.5/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build()
             return retrofit!!
         }
-    }//http://217.23.139.86:5000/login_generate/?email=aapetropavlovskiy@edu.hse.ru
-}//http://alf3ratz.pythonanywhere.com/
+    }
+}

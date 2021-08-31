@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -12,10 +13,76 @@
         tools:context=".ui.fragments.MainFragment">
 
 
+        <RadioGroup
+            android:id="@+id/citiesGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_25sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <CheckBox
+                android:id="@+id/moscowBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Moscow" />
+
+            <CheckBox
+                android:id="@+id/spbBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Spb" />
+
+            <CheckBox
+                android:id="@+id/kazanBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Kazan" />
+
+            <CheckBox
+                android:id="@+id/kurskBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Kursk" />
+
+        </RadioGroup>
+
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment" />
+            android:id="@+id/weatherText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Результат по городу"
+            android:textSize="@dimen/_18sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/citiesGroup" />
+
+        <Button
+            android:id="@+id/buttonForCity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Получить погоду по городу"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/weatherText" />
+        <TextView
+            android:id="@+id/weatherTextForHour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Результат за час"
+            android:textSize="@dimen/_18sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/buttonForCity" />
+        <Button
+            android:id="@+id/buttonForHour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Получить погоду за час"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/weatherTextForHour" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
