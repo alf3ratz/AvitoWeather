@@ -5,6 +5,7 @@ import androidx.annotation.NonNull
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import hse.ru.avitoweather.repositories.WeatherRepository
+import hse.ru.avitoweather.responses.HourlyResponse
 import hse.ru.avitoweather.responses.WeatherResponse
 
 class WeatherViewModel(@NonNull application: Application) : AndroidViewModel(application) {
@@ -16,7 +17,7 @@ class WeatherViewModel(@NonNull application: Application) : AndroidViewModel(app
     }
 
 
-    fun getWeatherAtLastHour(apiKey:String): LiveData<WeatherResponse> {
+    fun getWeatherAtLastHour(apiKey:String): LiveData<HourlyResponse> {
         return loginRepository.getWeatherAtLastHour(apiKey)
     }
 }

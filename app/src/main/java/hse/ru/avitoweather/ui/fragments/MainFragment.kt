@@ -1,17 +1,25 @@
 package hse.ru.avitoweather.ui.fragments
 
+import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import hse.ru.avitoweather.R
 import hse.ru.avitoweather.databinding.FragmentMainBinding
+import hse.ru.avitoweather.models.HourEntity
+import hse.ru.avitoweather.responses.HourlyResponse
 import hse.ru.avitoweather.responses.WeatherResponse
 import hse.ru.avitoweather.ui.activities.MainActivity
 import hse.ru.avitoweather.viewmodels.WeatherViewModel
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.util.ArrayList
 
 
 class MainFragment : Fragment() {
@@ -32,6 +40,7 @@ class MainFragment : Fragment() {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         var city = ""
@@ -64,18 +73,41 @@ class MainFragment : Fragment() {
                 })
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun getWeatherAtLastHour(city: String) {
-        viewModel.getWeatherAtLastHour( "d8c067ca50fc4748821b35656cca8e56")
+        viewModel.getWeatherAtLastHour("d8c067ca50fc4748821b35656cca8e56")
             .observe(
                 (activity as MainActivity),
-                { response: WeatherResponse? ->
+                { response: HourlyResponse? ->
                     if (response != null) {
-                        binding.weatherTextForHour.text = response.weather!![0].description
+                        var purposeHour = findLastHourWeather(response.hourlyWeather)
+                        binding.weatherTextForHour.text =
+                            purposeHour.weather[0].description//response.weather!![0].description
                     } else {
                         Toast.makeText(context, "Что-то пошло не так", Toast.LENGTH_LONG)
                             .show()
                     }
                 })
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun findLastHourWeather(hourlyWeather: ArrayList<HourEntity>): HourEntity {
+        val now = LocalDateTime.now()
+        var temp = LocalDateTime.MIN
+        var purposeHour = HourEntity()
+
+        for (weather in hourlyWeather) {
+            val dt = Instant.ofEpochSecond(weather.dateTime)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime()
+            if (dt < now && dt > temp) {
+                temp = dt
+                purposeHour = weather
+            } else {
+                return purposeHour
+            }
+        }
+        return purposeHour
     }
 
     private fun getPickedCity(): String {
