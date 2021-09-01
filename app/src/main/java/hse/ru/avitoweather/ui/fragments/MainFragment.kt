@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import hse.ru.avitoweather.R
+import hse.ru.avitoweather.adapters.WeatherAdapter
 import hse.ru.avitoweather.databinding.FragmentMainBinding
 import hse.ru.avitoweather.models.HourEntity
 import hse.ru.avitoweather.responses.HourlyResponse
@@ -25,6 +26,7 @@ import java.util.ArrayList
 class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
     private lateinit var viewModel: WeatherViewModel
+    var weatherElements: ArrayList<HourEntity> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,7 +58,9 @@ class MainFragment : Fragment() {
                 getWeatherAtLastHour(city)
             }
             weatherRecyclerView.setHasFixedSize(true)
-            val weatherAdapter = WeatherAdapter(events, this)
+            val weatherAdapter = WeatherAdapter(weatherElements, requireActivity())
+            weatherRecyclerView.adapter = weatherAdapter
+            invalidateAll()
         }
 
     }
