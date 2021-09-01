@@ -55,6 +55,8 @@ class MainFragment : Fragment() {
                 city = getPickedCity()
                 getWeatherAtLastHour(city)
             }
+            weatherRecyclerView.setHasFixedSize(true)
+            val weatherAdapter = WeatherAdapter(events, this)
         }
 
     }
