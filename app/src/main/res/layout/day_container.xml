@@ -5,7 +5,7 @@
     <data>
 
         <variable
-            name="info"
+            name="weatherInfo"
             type="hse.ru.avitoweather.models.HourEntity" />
     </data>
 
@@ -28,10 +28,32 @@
             android:id="@+id/temperatureText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:layout_marginStart="@dimen/_2sdp"
             android:hint="Температура"
-            android:text="@{`Температура: ` + info.temperature}"
+            android:text="@{`Температура: ` + weatherInfo.temperature}"
             app:layout_constraintStart_toEndOf="@id/temperatureIcon"
             app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/feelingsIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_20sdp"
+            android:layout_marginEnd="@dimen/_20sdp"
+            android:src="@drawable/ic_feels_like"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/temperatureIcon" />
+
+        <TextView
+            android:id="@+id/feelingsText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:layout_marginStart="@dimen/_2sdp"
+            android:hint="Ощущуается"
+            android:text="@{`Ощущается: ` + weatherInfo.feelsLike + `°C`}"
+            app:layout_constraintStart_toEndOf="@id/feelingsIcon"
+            app:layout_constraintTop_toBottomOf="@id/temperatureText" />
 
         <ImageView
             android:id="@+id/weatherIcon"
@@ -41,16 +63,39 @@
             android:layout_marginEnd="@dimen/_20sdp"
             android:src="@drawable/ic_cloud"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/temperatureIcon" />
+            app:layout_constraintTop_toBottomOf="@id/feelingsIcon" />
 
         <TextView
             android:id="@+id/weatherDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:layout_marginStart="@dimen/_2sdp"
             android:hint="Погода"
-            android:text="@{`Температура: ` + info.weather[0].description}"
+            android:text="@{`Погода: ` + weatherInfo.weather[0].description}"
             app:layout_constraintStart_toEndOf="@id/weatherIcon"
-            app:layout_constraintTop_toBottomOf="@id/temperatureText" />
+            app:layout_constraintTop_toBottomOf="@id/feelingsText" />
+        <ImageView
+            android:id="@+id/humidityIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_20sdp"
+            android:layout_marginEnd="@dimen/_20sdp"
+            android:src="@drawable/ic_humidity"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/weatherIcon" />
+
+        <TextView
+            android:id="@+id/humidityText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:layout_marginStart="@dimen/_2sdp"
+            android:hint="Влажность"
+            android:text="@{`Влажность: ` + weatherInfo.humidity+ `%`}"
+            app:layout_constraintStart_toEndOf="@id/humidityIcon"
+            app:layout_constraintTop_toBottomOf="@id/weatherDescription" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

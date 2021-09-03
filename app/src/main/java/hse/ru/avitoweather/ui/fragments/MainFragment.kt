@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import hse.ru.avitoweather.R
 import hse.ru.avitoweather.adapters.WeatherAdapter
 import hse.ru.avitoweather.databinding.FragmentMainBinding
+import hse.ru.avitoweather.listeners.WeatherListener
 import hse.ru.avitoweather.models.HourEntity
 import hse.ru.avitoweather.responses.HourlyResponse
 import hse.ru.avitoweather.responses.WeatherResponse
@@ -23,10 +24,11 @@ import java.time.ZoneId
 import java.util.ArrayList
 
 
-class MainFragment : Fragment() {
+class MainFragment : Fragment(), WeatherListener {
     private lateinit var binding: FragmentMainBinding
     private lateinit var viewModel: WeatherViewModel
-    var weatherElements: ArrayList<HourEntity> = ArrayList()
+    private var weatherElements: ArrayList<HourEntity> = ArrayList()
+    private lateinit var weatherAdapter: WeatherAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +60,7 @@ class MainFragment : Fragment() {
                 getWeatherAtLastHour(city)
             }
             weatherRecyclerView.setHasFixedSize(true)
-            val weatherAdapter = WeatherAdapter(weatherElements, requireActivity())
+            weatherAdapter = WeatherAdapter(weatherElements, this@MainFragment)
             weatherRecyclerView.adapter = weatherAdapter
             invalidateAll()
         }
@@ -89,6 +91,8 @@ class MainFragment : Fragment() {
                         var purposeHour = findLastHourWeather(response.hourlyWeather)
                         binding.weatherTextForHour.text =
                             purposeHour.weather[0].description//response.weather!![0].description
+                        weatherElements.addAll(response.hourlyWeather)
+                        weatherAdapter.notifyDataSetChanged()
                     } else {
                         Toast.makeText(context, "Что-то пошло не так", Toast.LENGTH_LONG)
                             .show()
@@ -128,7 +132,14 @@ class MainFragment : Fragment() {
             if (kazanBox.isChecked)
                 city = "Kazan"
         }
+        if (city.isEmpty()) {
+            city = "Moscow"
+        }
         return city
+    }
+
+    override fun onWeatherClicked(hourEntity: HourEntity) {
+        Toast.makeText(context, "ЩИИИИИИИЩ", Toast.LENGTH_LONG).show()
     }
 //    companion object {
 //        /**

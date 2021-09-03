@@ -4,45 +4,49 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import hse.ru.avitoweather.R
+import hse.ru.avitoweather.databinding.DayContainerBinding
+import hse.ru.avitoweather.listeners.WeatherListener
+import hse.ru.avitoweather.models.HourEntity
 
-class WeatherAdapter (events_: List<Event>, eventsListener_: EventListener) :
-    RecyclerView.Adapter<EventViewHolder>() {
+class WeatherAdapter(events_: List<HourEntity>, weatherListener_: WeatherListener) :
+    RecyclerView.Adapter<WeatherAdapter.WeatherViewHolder>() {
 
-    private var events: List<Event> = events_
+    private var hourlyWeather: List<HourEntity> = events_
     private var layoutInflater: LayoutInflater? = null
-    var eventsListener: EventListener = eventsListener_
+    var eventsListener: WeatherListener = weatherListener_
 
-    inner class EventViewHolder(itemLayoutBinding: ItemContainerEventBinding) :
+    inner class WeatherViewHolder(itemLayoutBinding: DayContainerBinding) :
         RecyclerView.ViewHolder(itemLayoutBinding.root) {
-        private var itemLayoutBinding: ItemContainerEventBinding? = null
+        private var containerBinding: DayContainerBinding? = null
 
         init {
-            this.itemLayoutBinding = itemLayoutBinding
+            this.containerBinding = itemLayoutBinding
         }
 
-        fun bindEvent(event: Event) {
-            itemLayoutBinding?.event = event
-            itemLayoutBinding?.executePendingBindings()
-            if (itemLayoutBinding?.root != null)
+        fun bindEvent(hourEntity: HourEntity) {
+            containerBinding?.weatherInfo = hourEntity
+            containerBinding?.executePendingBindings()
+            if (containerBinding?.root != null)
                 itemView.setOnClickListener {
-                    eventsListener.onEventClicked(event)
+                    eventsListener.onWeatherClicked(hourEntity)
                 }
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder {
         if (layoutInflater == null)
             layoutInflater = LayoutInflater.from(parent.context)
-        val eventBinding: ItemContainerEventBinding =
-            DataBindingUtil.inflate(layoutInflater!!, R.layout.item_container_event, parent, false)
-        return EventViewHolder(eventBinding)
+        val binding: DayContainerBinding =
+            DataBindingUtil.inflate(layoutInflater!!, R.layout.day_container, parent, false)
+        return WeatherViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: EventViewHolder, position: Int) {
-        holder.bindEvent(events[position])
+    override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) {
+        holder.bindEvent(hourlyWeather[position])
     }
 
     override fun getItemCount(): Int {
-        return events.size
+        return hourlyWeather.size
     }
 }

@@ -3,6 +3,8 @@ package hse.ru.avitoweather.ui.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import hse.ru.avitoweather.R
+import hse.ru.avitoweather.listeners.WeatherListener
+import hse.ru.avitoweather.models.HourEntity
 import hse.ru.avitoweather.ui.fragments.MainFragment
 
 class MainActivity : AppCompatActivity() {
@@ -18,4 +20,6 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.main_activity, MainFragment())
             .commit()
     }
+
+
 }
