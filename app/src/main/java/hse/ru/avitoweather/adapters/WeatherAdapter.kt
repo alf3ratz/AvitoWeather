@@ -31,7 +31,7 @@ class WeatherAdapter(events_: List<HourEntity>, weatherListener_: WeatherListene
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 hourEntity.dateTimeString = Instant.ofEpochSecond(hourEntity.dateTime)
                     .atZone(ZoneId.systemDefault())
-                    .toLocalDateTime().toString().replace("T"," ").toString()
+                    .toLocalDateTime().toString().replace("T"," ")
             }
             containerBinding?.weatherInfo = hourEntity
             containerBinding?.executePendingBindings()
