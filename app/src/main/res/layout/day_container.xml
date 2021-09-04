@@ -69,7 +69,7 @@
             android:layout_marginStart="@dimen/_2sdp"
             android:layout_marginTop="@dimen/_2sdp"
             android:hint="Температура"
-            android:text="@{`Температура: ` + weatherInfo.temperature}"
+            android:text="@{`Температура: ` + weatherInfo.temperature+`°C`}"
             app:layout_constraintStart_toEndOf="@id/temperatureIcon"
             app:layout_constraintTop_toBottomOf="@id/timeIcon" />
 

@@ -1,6 +1,202 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <variable
+            name="weatherInfo"
+            type="hse.ru.avitoweather.models.HourEntity" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/layout">
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/cityNames"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_160sdp"
+            android:paddingStart="@dimen/_80sdp"
+            android:paddingEnd="@dimen/_80sdp"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/spinner" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBaseline_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/viewPager">
+
+            <View
+                android:id="@+id/viewSupporter"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_150sdp"
+                app:layout_constraintTop_toTopOf="parent" />
+<!--            @id/directionIcon-->
+            <View
+                android:id="@+id/viewBackground"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@drawable/hourly_weather_background"
+                android:paddingBottom="@dimen/_20sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/viewSupporter" />
+
+            <ImageView
+                android:id="@+id/timeIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/_40sdp"
+                android:layout_marginEnd="@dimen/_20sdp"
+                android:paddingTop="@dimen/_4sdp"
+                android:src="@drawable/ic_time"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/viewBackground" />
+
+            <TextView
+                android:id="@+id/timeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_2sdp"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:hint="Время"
+                android:paddingTop="@dimen/_4sdp"
+                android:text="@{`Время: ` + weatherInfo.dateTimeString}"
+                app:layout_constraintStart_toEndOf="@id/timeIcon"
+                app:layout_constraintTop_toTopOf="@id/timeIcon" />
+
+            <ImageView
+                android:id="@+id/temperatureIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_20sdp"
+                android:src="@drawable/ic_temperature"
+                app:layout_constraintStart_toStartOf="@id/timeIcon"
+                app:layout_constraintTop_toBottomOf="@id/timeIcon" />
+
+            <TextView
+                android:id="@+id/temperatureText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_2sdp"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:hint="Температура"
+                android:text="@{`Температура: ` + weatherInfo.temperature+`°C`}"
+                app:layout_constraintStart_toEndOf="@id/temperatureIcon"
+                app:layout_constraintTop_toBottomOf="@id/timeIcon" />
+
+            <ImageView
+                android:id="@+id/feelingsIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_20sdp"
+                android:src="@drawable/ic_feels_like"
+                app:layout_constraintStart_toStartOf="@id/timeIcon"
+                app:layout_constraintTop_toBottomOf="@id/temperatureIcon" />
+
+            <TextView
+                android:id="@+id/feelingsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_2sdp"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:hint="Ощущуается"
+                android:text="@{`Ощущается: ` + weatherInfo.feelsLike + `°C`}"
+                app:layout_constraintStart_toEndOf="@id/feelingsIcon"
+                app:layout_constraintTop_toBottomOf="@id/temperatureIcon" />
+
+            <ImageView
+                android:id="@+id/weatherIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_20sdp"
+                android:src="@drawable/ic_cloud"
+                app:layout_constraintStart_toStartOf="@id/timeIcon"
+                app:layout_constraintTop_toBottomOf="@id/feelingsIcon" />
+
+            <TextView
+                android:id="@+id/weatherDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_2sdp"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:hint="Погода"
+                android:text="@{`Погода: ` + weatherInfo.weather[0].description}"
+                app:layout_constraintStart_toEndOf="@id/weatherIcon"
+                app:layout_constraintTop_toBottomOf="@id/feelingsIcon" />
+
+            <ImageView
+                android:id="@+id/humidityIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_20sdp"
+                android:src="@drawable/ic_humidity"
+                app:layout_constraintStart_toStartOf="@id/timeIcon"
+                app:layout_constraintTop_toBottomOf="@id/weatherIcon" />
+
+            <TextView
+                android:id="@+id/humidityText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_2sdp"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:hint="Влажность"
+                android:text="@{`Влажность: ` + weatherInfo.humidity+ `%`}"
+                app:layout_constraintStart_toEndOf="@id/humidityIcon"
+                app:layout_constraintTop_toBottomOf="@id/weatherIcon" />
+
+            <ImageView
+                android:id="@+id/speedIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_20sdp"
+                android:src="@drawable/ic_speed"
+                app:layout_constraintStart_toStartOf="@id/timeIcon"
+                app:layout_constraintTop_toBottomOf="@id/humidityIcon" />
+
+            <TextView
+                android:id="@+id/speedText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_2sdp"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:hint="Скорость ветра"
+                android:text="@{`Скорость ветра: ` + weatherInfo.windSpeed+ `м/с`}"
+                app:layout_constraintStart_toEndOf="@id/speedIcon"
+                app:layout_constraintTop_toBottomOf="@id/humidityIcon" />
+
+            <ImageView
+                android:id="@+id/directionIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_20sdp"
+                android:paddingBottom="@dimen/_4sdp"
+                android:src="@drawable/ic_direction"
+                app:layout_constraintStart_toStartOf="@id/timeIcon"
+                app:layout_constraintTop_toBottomOf="@id/speedIcon" />
+
+            <TextView
+                android:id="@+id/directionText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_2sdp"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:hint="Направление ветра"
+                android:text="@{`Направление ветра: ` + weatherInfo.windDirection}"
+                app:layout_constraintStart_toEndOf="@id/directionIcon"
+                app:layout_constraintTop_toBottomOf="@id/speedIcon" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

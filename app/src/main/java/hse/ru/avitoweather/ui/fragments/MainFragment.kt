@@ -11,8 +11,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.CompositePageTransformer
+import androidx.viewpager2.widget.MarginPageTransformer
+import androidx.viewpager2.widget.ViewPager2
 import hse.ru.avitoweather.adapters.WeatherAdapter
+import hse.ru.avitoweather.adapters.WeatherPagerAdapter
 import hse.ru.avitoweather.databinding.FragmentMainBinding
+import hse.ru.avitoweather.databinding.WeatherFragmentBinding
 import hse.ru.avitoweather.listeners.WeatherListener
 import hse.ru.avitoweather.models.HourEntity
 import hse.ru.avitoweather.responses.HourlyResponse
@@ -23,13 +29,16 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
+import kotlin.math.abs
 
 
 class MainFragment : Fragment(), WeatherListener {
     private lateinit var binding: FragmentMainBinding
+    private lateinit var binding_: WeatherFragmentBinding
     private lateinit var viewModel: WeatherViewModel
     private var weatherElements: ArrayList<HourEntity> = ArrayList()
     private lateinit var weatherAdapter: WeatherAdapter
+    private lateinit var weatherPagerAdapter: WeatherPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,14 +50,15 @@ class MainFragment : Fragment(), WeatherListener {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentMainBinding.inflate(inflater, container, false)
+        binding_ = WeatherFragmentBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
-        return binding.root
+        return binding_.root
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var city = ""
+        var city = "Moscow"
 
         binding.apply {
             buttonForCity.setOnClickListener {
@@ -60,17 +70,44 @@ class MainFragment : Fragment(), WeatherListener {
                 city = getPickedCity()
                 getWeatherAtLastHour(city)
             }
-//            val dividerItemDecoration = DividerItemDecoration(
-//                weatherRecyclerView.context,
-//                LinearLayoutManager(context).orientation
-//            )
-//            weatherRecyclerView.addItemDecoration(dividerItemDecoration)
-//            weatherRecyclerView.setHasFixedSize(true)
+
             weatherAdapter = WeatherAdapter(weatherElements, this@MainFragment)
             weatherRecyclerView.adapter = weatherAdapter
             invalidateAll()
         }
+        getWeatherAtLastHour(city)
+        loadViewPager()
 
+    }
+
+    private fun loadViewPager() {
+        weatherPagerAdapter = WeatherPagerAdapter(weatherElements)
+        binding_.viewPager.apply {
+            offscreenPageLimit = 3
+            adapter = weatherPagerAdapter
+            clipToPadding = false
+            clipChildren = false
+            getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+            val compositePageTransformer = CompositePageTransformer()
+            compositePageTransformer.addTransformer(MarginPageTransformer(40))
+            compositePageTransformer.addTransformer { page, position ->
+                val r = 1 - abs(position)
+                page.scaleY = 0.85f + r * 0.15f
+            }
+            setPageTransformer(compositePageTransformer)
+        }
+//        eventDetailActivityBinding?.sliderViewPager?.offscreenPageLimit = 1
+//        eventDetailActivityBinding?.sliderViewPager?.adapter = ImageSliderAdapter(sliderImages)
+//        eventDetailActivityBinding?.sliderViewPager?.visibility = View.VISIBLE
+//        eventDetailActivityBinding?.viewFadingEdge?.visibility = View.VISIBLE
+//        setupSliderIndicators(sliderImages.size)
+//        eventDetailActivityBinding?.sliderViewPager?.registerOnPageChangeCallback(object :
+//            ViewPager2.OnPageChangeCallback() {
+//            override fun onPageSelected(position: Int) {
+//                super.onPageSelected(position)
+//                setCurrentSliderIndicator(position)
+//            }
+//        })
     }
 
     private fun getCityWeather(city: String) {
@@ -98,7 +135,9 @@ class MainFragment : Fragment(), WeatherListener {
                         binding.weatherTextForHour.text =
                             purposeHour.weather[0].description//response.weather!![0].description
                         weatherElements.addAll(response.hourlyWeather)
+                        binding_.weatherInfo = purposeHour
                         weatherAdapter.notifyDataSetChanged()
+                        weatherPagerAdapter.notifyDataSetChanged()
                     } else {
                         Toast.makeText(context, "Что-то пошло не так", Toast.LENGTH_LONG)
                             .show()
