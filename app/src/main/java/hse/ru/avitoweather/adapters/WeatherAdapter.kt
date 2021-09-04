@@ -1,5 +1,6 @@
 package hse.ru.avitoweather.adapters
 
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -8,6 +9,8 @@ import hse.ru.avitoweather.R
 import hse.ru.avitoweather.databinding.DayContainerBinding
 import hse.ru.avitoweather.listeners.WeatherListener
 import hse.ru.avitoweather.models.HourEntity
+import java.time.Instant
+import java.time.ZoneId
 
 class WeatherAdapter(events_: List<HourEntity>, weatherListener_: WeatherListener) :
     RecyclerView.Adapter<WeatherAdapter.WeatherViewHolder>() {
@@ -25,6 +28,11 @@ class WeatherAdapter(events_: List<HourEntity>, weatherListener_: WeatherListene
         }
 
         fun bindEvent(hourEntity: HourEntity) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                hourEntity.dateTimeString = Instant.ofEpochSecond(hourEntity.dateTime)
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDateTime().toString().replace("T"," ").toString()
+            }
             containerBinding?.weatherInfo = hourEntity
             containerBinding?.executePendingBindings()
             if (containerBinding?.root != null)

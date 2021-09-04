@@ -8,10 +8,10 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class HourEntity {
-
+    var dateTimeString: String = ""
 
     @SerializedName("dt")
-    var dateTime: Long=0
+    var dateTime: Long = 0
 
     @SerializedName("temp")
     var temperature: Double = 0.0
@@ -36,4 +36,6 @@ class HourEntity {
 
     @SerializedName("weather")
     var weather: ArrayList<WeatherEntity> = ArrayList()
+
+
 }

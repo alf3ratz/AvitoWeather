@@ -2,14 +2,15 @@ package hse.ru.avitoweather.ui.fragments
 
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import hse.ru.avitoweather.R
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import hse.ru.avitoweather.adapters.WeatherAdapter
 import hse.ru.avitoweather.databinding.FragmentMainBinding
 import hse.ru.avitoweather.listeners.WeatherListener
@@ -21,7 +22,7 @@ import hse.ru.avitoweather.viewmodels.WeatherViewModel
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.util.ArrayList
+import java.util.*
 
 
 class MainFragment : Fragment(), WeatherListener {
@@ -59,7 +60,12 @@ class MainFragment : Fragment(), WeatherListener {
                 city = getPickedCity()
                 getWeatherAtLastHour(city)
             }
-            weatherRecyclerView.setHasFixedSize(true)
+//            val dividerItemDecoration = DividerItemDecoration(
+//                weatherRecyclerView.context,
+//                LinearLayoutManager(context).orientation
+//            )
+//            weatherRecyclerView.addItemDecoration(dividerItemDecoration)
+//            weatherRecyclerView.setHasFixedSize(true)
             weatherAdapter = WeatherAdapter(weatherElements, this@MainFragment)
             weatherRecyclerView.adapter = weatherAdapter
             invalidateAll()
