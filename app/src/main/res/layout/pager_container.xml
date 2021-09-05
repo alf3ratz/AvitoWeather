@@ -6,7 +6,7 @@
 
         <variable
             name="weatherInfo"
-            type="hse.ru.avitoweather.models.HourEntity" />
+            type="hse.ru.avitoweather.models.DayEntity" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,8 +18,8 @@
             android:id="@+id/temperatureIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_20sdp"
-            android:layout_marginEnd="@dimen/_20sdp"
+            android:layout_marginStart="@dimen/_2sdp"
+            android:layout_marginTop="@dimen/_2sdp"
             android:src="@drawable/ic_temperature"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -31,7 +31,7 @@
             android:layout_marginStart="@dimen/_2sdp"
             android:layout_marginTop="@dimen/_2sdp"
             android:hint="Температура"
-            android:text="@{`Температура: ` + weatherInfo.temperature+`°C`}"
+            android:text="@{`Температура: ` + weatherInfo.temperature.dayTemp+`°C`}"
             app:layout_constraintStart_toEndOf="@id/temperatureIcon"
             app:layout_constraintTop_toTopOf="@id/temperatureIcon" />
     </androidx.constraintlayout.widget.ConstraintLayout>

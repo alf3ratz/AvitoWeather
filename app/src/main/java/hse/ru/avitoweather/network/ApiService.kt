@@ -1,5 +1,6 @@
 package hse.ru.avitoweather.network
 
+import hse.ru.avitoweather.responses.DayResponse
 import hse.ru.avitoweather.responses.HourlyResponse
 import hse.ru.avitoweather.responses.WeatherResponse
 import retrofit2.Call
@@ -16,4 +17,7 @@ interface ApiService {
 
     @GET("onecall?lat=55.749804&lon=37.621059&units=metric&exclude=current,minutely,daily,alerts&lang=ru")
     fun getWeatherAtLastHour(@Query("appid")appid:String):Call<HourlyResponse>
+
+    @GET("onecall?lat=55.749804&lon=37.621059&units=metric&exclude=current,minutely,hourly,alerts&lang=ru")
+    fun getWeatherAtLastDay(@Query("appid")appid:String):Call<DayResponse>
 }

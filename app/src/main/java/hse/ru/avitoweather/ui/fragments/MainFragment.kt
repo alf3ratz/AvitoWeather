@@ -20,7 +20,9 @@ import hse.ru.avitoweather.adapters.WeatherPagerAdapter
 import hse.ru.avitoweather.databinding.FragmentMainBinding
 import hse.ru.avitoweather.databinding.WeatherFragmentBinding
 import hse.ru.avitoweather.listeners.WeatherListener
+import hse.ru.avitoweather.models.DayEntity
 import hse.ru.avitoweather.models.HourEntity
+import hse.ru.avitoweather.responses.DayResponse
 import hse.ru.avitoweather.responses.HourlyResponse
 import hse.ru.avitoweather.responses.WeatherResponse
 import hse.ru.avitoweather.ui.activities.MainActivity
@@ -29,14 +31,16 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.abs
 
 
 class MainFragment : Fragment(), WeatherListener {
-    private lateinit var binding: FragmentMainBinding
-    private lateinit var binding_: WeatherFragmentBinding
+    // private lateinit var binding: FragmentMainBinding
+    private lateinit var binding: WeatherFragmentBinding
     private lateinit var viewModel: WeatherViewModel
-    private var weatherElements: ArrayList<HourEntity> = ArrayList()
+    private var hourlyWeather: ArrayList<HourEntity> = ArrayList()
+    private var dailyWeather: ArrayList<DayEntity> = ArrayList()
     private lateinit var weatherAdapter: WeatherAdapter
     private lateinit var weatherPagerAdapter: WeatherPagerAdapter
 
@@ -49,10 +53,10 @@ class MainFragment : Fragment(), WeatherListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentMainBinding.inflate(inflater, container, false)
-        binding_ = WeatherFragmentBinding.inflate(inflater, container, false)
+        // binding = FragmentMainBinding.inflate(inflater, container, false)
+        binding = WeatherFragmentBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
-        return binding_.root
+        return binding.root
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -60,29 +64,30 @@ class MainFragment : Fragment(), WeatherListener {
         super.onViewCreated(view, savedInstanceState)
         var city = "Moscow"
 
-        binding.apply {
-            buttonForCity.setOnClickListener {
-                city = getPickedCity()
-
-                getCityWeather(city)
-            }
-            buttonForHour.setOnClickListener {
-                city = getPickedCity()
-                getWeatherAtLastHour(city)
-            }
-
-            weatherAdapter = WeatherAdapter(weatherElements, this@MainFragment)
-            weatherRecyclerView.adapter = weatherAdapter
-            invalidateAll()
-        }
-        getWeatherAtLastHour(city)
+//        binding.apply {
+//            buttonForCity.setOnClickListener {
+//                city = getPickedCity()
+//
+//                getCityWeather(city)
+//            }
+//            buttonForHour.setOnClickListener {
+//                city = getPickedCity()
+//                getWeatherAtLastHour(city)
+//            }
+//
+//            weatherAdapter = WeatherAdapter(weatherElements, this@MainFragment)
+//            weatherRecyclerView.adapter = weatherAdapter
+//            invalidateAll()
+//        }
+        //getWeatherAtLastHour(city)
         loadViewPager()
+        getWeatherAtLastDay("Moscow")
 
     }
 
     private fun loadViewPager() {
-        weatherPagerAdapter = WeatherPagerAdapter(weatherElements)
-        binding_.viewPager.apply {
+        weatherPagerAdapter = WeatherPagerAdapter(dailyWeather)
+        binding.viewPager.apply {
             offscreenPageLimit = 3
             adapter = weatherPagerAdapter
             clipToPadding = false
@@ -116,7 +121,7 @@ class MainFragment : Fragment(), WeatherListener {
                 (activity as MainActivity),
                 { response: WeatherResponse? ->
                     if (response != null) {
-                        binding.weatherText.text = response.weather!![0].description
+                        //binding.weatherText.text = response.weather!![0].description
                     } else {
                         Toast.makeText(context, "Что-то пошло не так", Toast.LENGTH_LONG)
                             .show()
@@ -132,10 +137,10 @@ class MainFragment : Fragment(), WeatherListener {
                 { response: HourlyResponse? ->
                     if (response != null) {
                         var purposeHour = findLastHourWeather(response.hourlyWeather)
-                        binding.weatherTextForHour.text =
-                            purposeHour.weather[0].description//response.weather!![0].description
-                        weatherElements.addAll(response.hourlyWeather)
-                        binding_.weatherInfo = purposeHour
+                        //binding.weatherTextForHour.text =
+                        purposeHour.weather[0].description//response.weather!![0].description
+                        //weatherElements.addAll(response.hourlyWeather)
+                        //binding_.weatherInfo = purposeHour
                         weatherAdapter.notifyDataSetChanged()
                         weatherPagerAdapter.notifyDataSetChanged()
                     } else {
@@ -143,6 +148,27 @@ class MainFragment : Fragment(), WeatherListener {
                             .show()
                     }
                 })
+    }
+
+    private fun getWeatherAtLastDay(city: String) {
+        viewModel.getWeatherAtLastDay( "d8c067ca50fc4748821b35656cca8e56")
+            .observe((activity as MainActivity)) { response: DayResponse? ->
+                if (response != null) {
+                    val dayEntity = response.dayWeatherInfo[0]
+                    dailyWeather.addAll(response.dayWeatherInfo)
+                    weatherPagerAdapter.notifyDataSetChanged()
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        dayEntity.dateTime = Instant.ofEpochSecond(dayEntity.dateTime.toLong())
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDateTime().toString()
+                    }
+                    dayEntity.cityName = response.city
+                    binding.weatherInfo = dayEntity
+                } else {
+                    Toast.makeText(context, "Что-то пошло не так в получении дня", Toast.LENGTH_LONG)
+                        .show()
+                }
+            }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -168,14 +194,14 @@ class MainFragment : Fragment(), WeatherListener {
     private fun getPickedCity(): String {
         var city = ""
         binding.apply {
-            if (moscowBox.isChecked)
-                city = "Moscow"
-            if (spbBox.isChecked)
-                city = "Saint_Petersburg"
-            if (kurskBox.isChecked)
-                city = "Kursk"
-            if (kazanBox.isChecked)
-                city = "Kazan"
+//            if (moscowBox.isChecked)
+//                city = "Moscow"
+//            if (spbBox.isChecked)
+//                city = "Saint_Petersburg"
+//            if (kurskBox.isChecked)
+//                city = "Kursk"
+//            if (kazanBox.isChecked)
+//                city = "Kazan"
         }
         if (city.isEmpty()) {
             city = "Moscow"

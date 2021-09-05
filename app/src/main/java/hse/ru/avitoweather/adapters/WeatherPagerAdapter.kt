@@ -1,16 +1,22 @@
 package hse.ru.avitoweather.adapters
 
+import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import hse.ru.avitoweather.R
 import hse.ru.avitoweather.databinding.PagerContainerBinding
+import hse.ru.avitoweather.models.DayEntity
 import hse.ru.avitoweather.models.HourEntity
+import java.lang.NumberFormatException
+import java.time.Instant
+import java.time.ZoneId
 
-class WeatherPagerAdapter(sliderWeatherInfo: ArrayList<HourEntity>) :
+class WeatherPagerAdapter(sliderWeatherInfo: ArrayList<DayEntity>) :
     RecyclerView.Adapter<WeatherPagerAdapter.WeatherPagerViewHolder>() {
-    private var weatherInfo: ArrayList<HourEntity>? = null
+    private var weatherInfo: ArrayList<DayEntity>? = null
     private var layoutInflater: LayoutInflater? = null
 
     init {
@@ -25,7 +31,16 @@ class WeatherPagerAdapter(sliderWeatherInfo: ArrayList<HourEntity>) :
             this.binding = itemContainerSliderImageBinding
         }
 
-        fun bindSliderImage(weatherInfo:HourEntity) {
+        fun bindSliderImage(weatherInfo: DayEntity) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                try {
+                    weatherInfo.dateTime = Instant.ofEpochSecond(weatherInfo.dateTime.toLong())
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDateTime().toString()
+                }catch (e:NumberFormatException){
+                    Log.i("норм","первый элемент")
+                }
+            }
             binding?.weatherInfo = weatherInfo
         }
 

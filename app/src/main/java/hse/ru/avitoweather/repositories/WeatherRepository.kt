@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import hse.ru.avitoweather.network.ApiClient
 import hse.ru.avitoweather.network.ApiService
+import hse.ru.avitoweather.responses.DayResponse
 import hse.ru.avitoweather.responses.HourlyResponse
 import hse.ru.avitoweather.responses.WeatherResponse
 import retrofit2.Call
@@ -45,6 +46,24 @@ class WeatherRepository {
             override fun onResponse(
                 @NonNull call: Call<HourlyResponse>,
                 @NonNull response: Response<HourlyResponse>
+            ) {
+                data.value = response.body()
+                Log.i("fal", "ne upalo\n${response.isSuccessful}")
+            }
+        })
+        return data
+    }
+    fun getWeatherAtLastDay( apiKey:String): LiveData<DayResponse>{
+        val data: MutableLiveData<DayResponse> = MutableLiveData()
+        apiService.getWeatherAtLastDay(apiKey).enqueue(object : Callback<DayResponse> {
+            override fun onFailure(@NonNull call: Call<DayResponse>, t: Throwable) {
+                data.value = null
+                Log.i("fal", "upalo\n${t.message}")
+            }
+
+            override fun onResponse(
+                @NonNull call: Call<DayResponse>,
+                @NonNull response: Response<DayResponse>
             ) {
                 data.value = response.body()
                 Log.i("fal", "ne upalo\n${response.isSuccessful}")
