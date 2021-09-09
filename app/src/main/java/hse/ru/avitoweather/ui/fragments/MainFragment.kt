@@ -1,23 +1,22 @@
 package hse.ru.avitoweather.ui.fragments
 
+import android.R
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
-import androidx.viewpager2.widget.ViewPager2
 import hse.ru.avitoweather.adapters.WeatherAdapter
 import hse.ru.avitoweather.adapters.WeatherPagerAdapter
-import hse.ru.avitoweather.databinding.FragmentMainBinding
 import hse.ru.avitoweather.databinding.WeatherFragmentBinding
 import hse.ru.avitoweather.listeners.WeatherListener
 import hse.ru.avitoweather.models.DayEntity
@@ -81,7 +80,30 @@ class MainFragment : Fragment(), WeatherListener {
 //        }
         //getWeatherAtLastHour(city)
         loadViewPager()
-        getWeatherAtLastDay("Moscow")
+        getWeatherAtLastDay("55.749804", "37.621059")
+        val choose = arrayOf("Moscow", "Kursk","Kazan")
+        binding.apply {
+            spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    itemSelected: View, selectedItemPosition: Int, selectedId: Long
+                ) {
+                    when (choose[selectedItemPosition]) {
+                        "Moscow" -> getWeatherAtLastDay("55.749804", "37.621059")
+                        "Kazan" -> getWeatherAtLastDay("55.796127", "49.106414")
+                        "Kursk" -> getWeatherAtLastDay("51.730846", "36.193015")
+                    }
+                    Toast.makeText(
+                        context,
+                        "Ваш выбор: " + choose[selectedItemPosition], Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
+
+
+        }
 
     }
 
@@ -150,12 +172,12 @@ class MainFragment : Fragment(), WeatherListener {
                 })
     }
 
-    private fun getWeatherAtLastDay(city: String) {
-        viewModel.getWeatherAtLastDay( "d8c067ca50fc4748821b35656cca8e56")
+    private fun getWeatherAtLastDay(lat: String, lon: String) {
+        viewModel.getWeatherAtLastDay(lat, lon, "d8c067ca50fc4748821b35656cca8e56")
             .observe((activity as MainActivity)) { response: DayResponse? ->
                 if (response != null) {
                     val dayEntity = response.dayWeatherInfo[0]
-                    dailyWeather.addAll(response.dayWeatherInfo)
+                    dailyWeather.addAll(sortWeather(response.dayWeatherInfo.subList(1,response.dayWeatherInfo.size-1)))
                     weatherPagerAdapter.notifyDataSetChanged()
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         dayEntity.dateTime = Instant.ofEpochSecond(dayEntity.dateTime.toLong())
@@ -165,7 +187,11 @@ class MainFragment : Fragment(), WeatherListener {
                     dayEntity.cityName = response.city
                     binding.weatherInfo = dayEntity
                 } else {
-                    Toast.makeText(context, "Что-то пошло не так в получении дня", Toast.LENGTH_LONG)
+                    Toast.makeText(
+                        context,
+                        "Что-то пошло не так в получении дня",
+                        Toast.LENGTH_LONG
+                    )
                         .show()
                 }
             }
@@ -191,6 +217,12 @@ class MainFragment : Fragment(), WeatherListener {
         return purposeHour
     }
 
+    private fun sortWeather(weatherInfo:MutableList<DayEntity>):MutableList<DayEntity>{
+        //response.dayWeatherInfo.subList(1,response.dayWeatherInfo.size-1)
+        var correctInfo = mutableListOf<DayEntity>()
+        correctInfo= weatherInfo.filter { i->!correctInfo.contains(i) }.toMutableList()
+        return correctInfo
+    }
     private fun getPickedCity(): String {
         var city = ""
         binding.apply {

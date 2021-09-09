@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -13,16 +14,41 @@
         android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
+        <TextView
+            android:id="@+id/cityText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Город: "
+            android:textSize="@dimen/_18sdp"
+            android:fontFamily="@font/ubuntu_bold"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
         <Spinner
             android:id="@+id/spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_8sdp"
             android:layout_marginTop="@dimen/_8sdp"
+            android:backgroundTint="@color/hourly_weather_background_color"
+            android:backgroundTintMode="add"
             android:entries="@array/cityNames"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toEndOf="@id/cityText"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:targetApi="lollipop" />
+
+        <TextView
+            android:id="@+id/dailyText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginBottom="@dimen/_16sdp"
+            android:fontFamily="@font/ubuntu_bold"
+            android:text="Погода за неделю"
+            android:textSize="@dimen/_18sdp"
+            app:layout_constraintTop_toBottomOf="@id/spinner" />
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager"
@@ -32,7 +58,7 @@
             android:paddingStart="@dimen/_80sdp"
             android:paddingEnd="@dimen/_80sdp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/spinner" />
+            app:layout_constraintTop_toBottomOf="@id/dailyText" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -44,7 +70,7 @@
             <View
                 android:id="@+id/viewSupporter"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_150sdp"
+                android:layout_height="@dimen/_100sdp"
                 app:layout_constraintBottom_toTopOf="@id/dayWeatherText"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -52,6 +78,10 @@
                 android:id="@+id/dayWeatherText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginBottom="@dimen/_8sdp"
+                android:fontFamily="@font/ubuntu_medium"
                 android:text="@{`Погода на сегодня в городе `+weatherInfo.cityName}"
                 app:layout_constraintBottom_toTopOf="@id/viewBackground"
                 app:layout_constraintStart_toStartOf="parent"
@@ -95,6 +125,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_2sdp"
                 android:layout_marginTop="@dimen/_2sdp"
+                android:fontFamily="@font/ubuntu_regular"
                 android:hint="Время"
                 android:paddingTop="@dimen/_4sdp"
                 android:text="@{`Время: ` + weatherInfo.dateTime}"
@@ -199,8 +230,8 @@
                 android:layout_marginTop="@dimen/_2sdp"
                 android:hint="Давление"
                 android:text="@{`Давление: ` + weatherInfo.pressure}"
-                app:layout_constraintStart_toEndOf="@id/directionIcon"
-                app:layout_constraintTop_toBottomOf="@id/speedIcon" />
+                app:layout_constraintTop_toBottomOf="@id/speedText"
+                app:layout_constraintStart_toEndOf="@id/directionIcon" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

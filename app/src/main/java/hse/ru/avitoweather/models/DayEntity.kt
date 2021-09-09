@@ -60,4 +60,9 @@ class DayEntity {
 
     @SerializedName("uvi")
     var uvi = 0.0
+
+    override fun equals(other: Any?): Boolean {
+        //return super.equals(other)
+        return dateTime != (other as DayEntity).dateTime
+    }
 }

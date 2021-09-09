@@ -53,9 +53,9 @@ class WeatherRepository {
         })
         return data
     }
-    fun getWeatherAtLastDay( apiKey:String): LiveData<DayResponse>{
+    fun getWeatherAtLastDay( lat:String, lon:String,apiKey:String): LiveData<DayResponse>{
         val data: MutableLiveData<DayResponse> = MutableLiveData()
-        apiService.getWeatherAtLastDay(apiKey).enqueue(object : Callback<DayResponse> {
+        apiService.getWeatherAtLastDay(lat,lon,apiKey).enqueue(object : Callback<DayResponse> {
             override fun onFailure(@NonNull call: Call<DayResponse>, t: Throwable) {
                 data.value = null
                 Log.i("fal", "upalo\n${t.message}")

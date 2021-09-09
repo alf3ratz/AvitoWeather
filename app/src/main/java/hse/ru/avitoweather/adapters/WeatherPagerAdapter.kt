@@ -36,9 +36,15 @@ class WeatherPagerAdapter(sliderWeatherInfo: ArrayList<DayEntity>) :
                 try {
                     weatherInfo.dateTime = Instant.ofEpochSecond(weatherInfo.dateTime.toLong())
                         .atZone(ZoneId.systemDefault())
-                        .toLocalDateTime().toString()
+                        .toLocalDateTime().toString().substringBefore("T")
+                    weatherInfo.sunrise = Instant.ofEpochSecond(weatherInfo.sunrise.toLong())
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDateTime().toString().substringAfter("T")
+                    weatherInfo.sunset = Instant.ofEpochSecond(weatherInfo.sunset.toLong())
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDateTime().toString().substringAfter("T")
                 }catch (e:NumberFormatException){
-                    Log.i("норм","первый элемент")
+                    Log.i("норм","первый элемент ${weatherInfo.dateTime}")
                 }
             }
             binding?.weatherInfo = weatherInfo

@@ -22,7 +22,7 @@ class WeatherViewModel(@NonNull application: Application) : AndroidViewModel(app
         return loginRepository.getWeatherAtLastHour(apiKey)
     }
 
-    fun getWeatherAtLastDay(apiKey:String):LiveData<DayResponse>{
-        return loginRepository.getWeatherAtLastDay(apiKey)
+    fun getWeatherAtLastDay(lat:String, lon:String,apiKey:String):LiveData<DayResponse>{
+        return loginRepository.getWeatherAtLastDay(lat,lon,apiKey)
     }
 }
