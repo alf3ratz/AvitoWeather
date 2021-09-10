@@ -9,13 +9,13 @@ import android.os.Build
 import hse.ru.avitoweather.R
 import android.os.Bundle
 import android.os.Looper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.constraintlayout.motion.widget.Debug.getLocation
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -85,6 +85,9 @@ class MainFragment : Fragment() {
         //else locationPermission()
     }
 
+    /**
+     * Проверка разрешений для получения местоположения
+     */
     private fun checkLocationPermission(): Boolean {
         val state =
             ActivityCompat.checkSelfPermission(
@@ -94,6 +97,9 @@ class MainFragment : Fragment() {
         return state == PackageManager.PERMISSION_GRANTED
     }
 
+    /**
+     * Вспомогательныйметод для получения местоположения
+     */
     private fun makeLocationRequest() {
         locationRequest = LocationRequest.create().apply {
             interval = 10000
@@ -102,6 +108,9 @@ class MainFragment : Fragment() {
         }
     }
 
+    /**
+     * Вспомогательныйметод для получения местоположения
+     */
     private fun makeLocationCallback() {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(p0: LocationResult) {
@@ -111,16 +120,25 @@ class MainFragment : Fragment() {
         }
     }
 
+    /**
+     * Вспомогательныйметод для получения местоположения
+     */
     private fun makeLocationSettings() {
         val settingsBuilder: LocationSettingsRequest.Builder = LocationSettingsRequest.Builder()
         settingsBuilder.addLocationRequest(locationRequest)
         locationSettingsRequest = settingsBuilder.build()
     }
 
+    /**
+     * Прекращение получения местоположения
+     */
     private fun stopLocationUpdates() {
         fusedLocationProviderClient?.removeLocationUpdates(locationCallback)
     }
 
+    /**
+     * Вспомогательныйметод для получения местоположения
+     */
     private fun startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
@@ -147,6 +165,9 @@ class MainFragment : Fragment() {
 
     }
 
+    /**
+     * Вспомогательныйметод для получения местоположения
+     */
     @SuppressLint("MissingPermission")
     private fun setLocation() {
         fusedLocationProviderClient?.requestLocationUpdates(
@@ -205,6 +226,9 @@ class MainFragment : Fragment() {
         }
     }
 
+    /**
+     * Метод, работающий с аргументами выпадающего списка
+     */
     private fun makeChoise(position: Int) {
         if (dailyWeather.isNotEmpty()) {
             dailyWeather.clear()
@@ -256,16 +280,19 @@ class MainFragment : Fragment() {
                         location?.longitude.toString(), position
                     )
                 } else {
-                    Toast.makeText(context, "ошибка2", Toast.LENGTH_LONG).show()
+                    Log.i("failed","fail2")
                 }
             } else {
                 weatherPagerAdapter.notifyDataSetChanged()
-                Toast.makeText(context, "ошибка1", Toast.LENGTH_LONG).show()
+                Log.i("failed","fail1")
             }
         }
 
     }
 
+    /**
+     * Создание адаптера для погоды на неделю.
+     */
     private fun loadViewPager() {
         weatherPagerAdapter = WeatherPagerAdapter(dailyWeather)
         binding!!.viewPager.apply {
@@ -320,6 +347,9 @@ class MainFragment : Fragment() {
                 })
     }
 
+    /**
+     * Получение погоды за сегодняшний день и за неделю.
+     */
     private fun getWeatherAtLastDay(lat: String, lon: String, position: Int) {
         viewModel.getWeatherAtLastDay(lat, lon, "d8c067ca50fc4748821b35656cca8e56")
             .observe((activity as MainActivity)) { response: DayResponse? ->
