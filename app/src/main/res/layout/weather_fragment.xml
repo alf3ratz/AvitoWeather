@@ -14,17 +14,19 @@
         android:id="@+id/layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <TextView
             android:id="@+id/cityText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Город: "
-            android:textSize="@dimen/_18sdp"
-            android:fontFamily="@font/ubuntu_bold"
             android:layout_marginStart="@dimen/_8sdp"
             android:layout_marginTop="@dimen/_8sdp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            android:fontFamily="@font/ubuntu_bold"
+            android:text="Город: "
+            android:textSize="@dimen/_18sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <Spinner
             android:id="@+id/spinner"
             android:layout_width="wrap_content"
@@ -44,7 +46,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_8sdp"
             android:layout_marginTop="@dimen/_8sdp"
-            android:layout_marginBottom="@dimen/_16sdp"
             android:fontFamily="@font/ubuntu_bold"
             android:text="Погода за неделю"
             android:textSize="@dimen/_18sdp"
@@ -57,14 +58,16 @@
             android:orientation="horizontal"
             android:paddingStart="@dimen/_80sdp"
             android:paddingEnd="@dimen/_80sdp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/lowerLayout"
             app:layout_constraintTop_toBottomOf="@id/dailyText" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
+            android:id="@+id/lowerLayout"
+            android:layout_width="wrap_content"
             android:layout_height="0dp"
-            app:layout_constraintBaseline_toBottomOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/viewPager">
 
             <View
@@ -82,7 +85,9 @@
                 android:layout_marginTop="@dimen/_8sdp"
                 android:layout_marginBottom="@dimen/_8sdp"
                 android:fontFamily="@font/ubuntu_medium"
+                android:hint="Погода за день"
                 android:text="@{`Погода на сегодня в городе `+weatherInfo.cityName}"
+                android:textSize="@dimen/_10sdp"
                 app:layout_constraintBottom_toTopOf="@id/viewBackground"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/viewSupporter" />
@@ -94,8 +99,8 @@
                 android:layout_marginStart="@dimen/_8sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:background="@drawable/hourly_weather_background"
-                android:paddingBottom="@dimen/_20sdp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/dayWeatherText" />
 
             <View
@@ -105,7 +110,10 @@
                 android:layout_marginStart="@dimen/_8sdp"
                 android:layout_marginEnd="@dimen/_8sdp"
                 android:background="@drawable/fading_background"
-                app:layout_constraintBottom_toBottomOf="@id/viewBackground" />
+                app:layout_constraintBottom_toBottomOf="@id/viewBackground"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/pressureText" />
 
             <ImageView
                 android:id="@+id/timeIcon"
@@ -223,15 +231,15 @@
                 app:layout_constraintTop_toBottomOf="@id/speedIcon" />
 
             <TextView
-                android:id="@+id/directionText"
+                android:id="@+id/pressureText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_2sdp"
                 android:layout_marginTop="@dimen/_2sdp"
                 android:hint="Давление"
                 android:text="@{`Давление: ` + weatherInfo.pressure}"
-                app:layout_constraintTop_toBottomOf="@id/speedText"
-                app:layout_constraintStart_toEndOf="@id/directionIcon" />
+                app:layout_constraintStart_toEndOf="@id/directionIcon"
+                app:layout_constraintTop_toBottomOf="@id/speedText" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,4 +5,8 @@
         android:topLeftRadius="@dimen/_45sdp"
         android:topRightRadius="@dimen/_45sdp" />
     <solid android:color="@color/hourly_weather_background_color" />
+<!--    <gradient-->
+<!--        android:angle="270"-->
+<!--        android:endColor="@color/hourly_weather_background_color"-->
+<!--        android:startColor="@android:color/transparent"/>-->
 </shape>

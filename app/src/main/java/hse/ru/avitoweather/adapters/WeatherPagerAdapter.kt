@@ -16,7 +16,7 @@ import java.time.ZoneId
 
 class WeatherPagerAdapter(sliderWeatherInfo: ArrayList<DayEntity>) :
     RecyclerView.Adapter<WeatherPagerAdapter.WeatherPagerViewHolder>() {
-    private var weatherInfo: ArrayList<DayEntity>? = null
+    private var weatherInfo: ArrayList<DayEntity> = ArrayList()
     private var layoutInflater: LayoutInflater? = null
 
     init {
@@ -43,8 +43,8 @@ class WeatherPagerAdapter(sliderWeatherInfo: ArrayList<DayEntity>) :
                     weatherInfo.sunset = Instant.ofEpochSecond(weatherInfo.sunset.toLong())
                         .atZone(ZoneId.systemDefault())
                         .toLocalDateTime().toString().substringAfter("T")
-                }catch (e:NumberFormatException){
-                    Log.i("норм","первый элемент ${weatherInfo.dateTime}")
+                } catch (e: NumberFormatException) {
+                    Log.i("норм", "первый элемент ${weatherInfo.dateTime}")
                 }
             }
             binding?.weatherInfo = weatherInfo

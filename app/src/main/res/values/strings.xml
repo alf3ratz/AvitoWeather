@@ -3,10 +3,15 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <array name="cityNames" >
+    <array name="cityNames">
         <item>Москва</item>
         <item>Курск</item>
         <item>Казань</item>
+        <item>Санкт-Петербург</item>
+        <item>Нижний Новгород</item>
+        <item>Уфа</item>
+        <item>Екатирининбург</item>
+        <item>По местоположению</item>
     </array>
 
 </resources>
